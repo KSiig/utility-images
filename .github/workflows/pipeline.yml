@@ -1,0 +1,36 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches:
+      - main
+    tags:
+      - "*"
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v1
+      - name: Build
+        run: |
+          make docker_build_base docker_push_base
+        env:
+          CR_PAT: ${{ secrets.CR_PAT }}
+
+  release:
+    name: Release
+    runs-on: ubuntu-latest
+    if: contains(github.ref, 'refs/tags/')
+    needs: build
+    steps:
+      - uses: actions/checkout@v1
+      - name: Release
+        run: |
+          make docker_release_base
+        env:
+          CR_PAT: ${{ secrets.CR_PAT }}
