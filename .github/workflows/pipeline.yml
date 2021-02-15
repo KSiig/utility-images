@@ -18,7 +18,7 @@ jobs:
       - uses: actions/checkout@v1
       - name: Build
         run: |
-          make docker_build_base docker_push_base
+          make docker_build_all docker_push_all
         env:
           CR_PAT: ${{ secrets.CR_PAT }}
 
@@ -31,6 +31,6 @@ jobs:
       - uses: actions/checkout@v1
       - name: Release
         run: |
-          make docker_release_base
+          make docker_release_all
         env:
           CR_PAT: ${{ secrets.CR_PAT }}
