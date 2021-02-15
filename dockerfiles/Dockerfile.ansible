@@ -1,0 +1,7 @@
+ARG BUILD_ARGS_FROM_IMAGE=ghcr.io/ksiig/utility-images
+FROM ${BUILD_ARGS_FROM_IMAGE}:base-latest
+
+# Ansible and testing tools
+RUN apt update -qq && \
+  apt install -y -qq python3-pip && \
+  pip3 install molecule molecule-docker pytest ansible

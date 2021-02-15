@@ -48,8 +48,6 @@ _builder: _init
 		--cache-from ${DOCKER_IMAGE_NAME}:${BUILD_ARGS_RELEASE_TAG} \
 		--build-arg BUILD_ARGS_FROM_IMAGE=${BUILD_ARGS_FROM_IMAGE} \
 		--build-arg BUILD_ARGS_FROM_TAG=${BUILD_ARGS_FROM_TAG} \
-		--build-arg REPO_OWNER=${REPO_OWNER} \
-		--build-arg REPO_NAME=${DOCKER_IMAGE} \
 		--label org.opencontainers.image.source=${DOCKER_LABEL_SOURCE} \
 		-t ${DOCKER_IMAGE_NAME}:${BUILD_ARGS_TAG} \
 		-f ${BUILD_ARGS_DOCKERFILE} .
@@ -70,15 +68,15 @@ _releaser: _init
 	@printf "${GREEN}Released ${DOCKER_IMAGE_NAME}:${BUILD_ARGS_RELEASE_TAG}!${NO_COLOR}\n"
 .PHONY: _releaser
 
-build_base:
+build:
 	$(MAKE) _builder
 .PHONY: build_base
 
-push_base:
+push:
 	$(MAKE) _pusher
 .PHONY: push_base
 
-release_base:
+release:
 	$(MAKE) _releaser && \
 	$(MAKE) _releaser -e BUILD_ARGS_RELEASE_TAG="latest"
 .PHONY: release_base
@@ -86,8 +84,7 @@ release_base:
 # Actual targets
 build_%:
 	$(MAKE) _builder \
-		-e BUILD_ARGS_TAG="${GIT_HASH_SHORT}" \
-		-e DOCKER_IMAGE="$*" \
+		-e BUILD_ARGS_TAG="$*-${GIT_HASH_SHORT}" \
 		-e BUILD_ARGS_DOCKERFILE="${DOCKERFILES_FOLDER}/Dockerfile.$*"
 
 push_%:
@@ -97,7 +94,27 @@ push_%:
 release_%:
 	$(MAKE) _releaser \
 		-e BUILD_ARGS_TAG="$*-${GIT_HASH_SHORT}" \
-		-e DOCKER_IMAGE="$*"
+
+build_all:
+	$(MAKE) build && \
+	ls ${DOCKERFILES_FOLDER} | sed 's/Dockerfile//g' | \
+	sed 's/\./_/g' | \
+	xargs -i  $(MAKE) build{}
+.PHONY: build_all
+
+push_all:
+	$(MAKE) push && \
+	ls ${DOCKERFILES_FOLDER} | sed 's/Dockerfile//g' | \
+	sed 's/\./_/g' | \
+	xargs -i $(MAKE) push{}
+.PHONY: push_all
+
+release_all:
+	$(MAKE) release && \
+	ls ${DOCKERFILES_FOLDER} | sed 's/Dockerfile//g' | \
+	sed 's/\./_/g' | \
+	xargs -i $(MAKE) release{}
+.PHONY: release_all
 
 docker_%: _init
 	@docker run --rm \
