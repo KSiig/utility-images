@@ -1,7 +1,7 @@
 ---
 name: Bug report
 about: For fixing existing issues in the code
-labels: bug
+labels: bug, need refinement
 assignees: ''
 
 ---
