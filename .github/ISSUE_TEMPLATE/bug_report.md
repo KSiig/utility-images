@@ -3,7 +3,7 @@ name: Bug report
 about: For fixing existing issues in the code
 labels: bug, need refinement
 assignees: ''
-
+project: Kanban
 ---
 
 # Describe the bug
