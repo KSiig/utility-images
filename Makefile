@@ -2,7 +2,7 @@ GIT_HASH_SHORT ?= $(shell git log --format="%h" -n 1)
 
 REPO_OWNER ?= ksiig
 DOCKER_REGISTRY ?= ghcr.io
-DOCKER_IMAGE ?= pipeline-images
+DOCKER_IMAGE ?= utility-images
 DOCKER_IMAGE_NAME ?= ${DOCKER_REGISTRY}/${REPO_OWNER}/${DOCKER_IMAGE}
 DOCKER_LABEL_SOURCE ?= https://github.com/${REPO_OWNER}/${DOCKER_IMAGE}
 
