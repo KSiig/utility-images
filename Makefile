@@ -99,7 +99,7 @@ release_%:
 		-e BUILD_ARGS_TAG="$*-${GIT_HASH_SHORT}" \
 		-e DOCKER_IMAGE="$*"
 
-docker_%:
+docker_%: _init
 	@docker run --rm \
 	-v /var/run/docker.sock:/var/run/docker.sock \
 	-v $(shell pwd):/app \
