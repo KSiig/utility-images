@@ -11,7 +11,7 @@ DOCKERFILES_FOLDER ?= dockerfiles
 BUILD_ARGS_DOCKERFILE ?= ${DOCKERFILES_FOLDER}/Dockerfile
 BUILD_ARGS_NAME ?= base
 BUILD_ARGS_TAG ?= ${BUILD_ARGS_NAME}-${GIT_HASH_SHORT}
-BUILD_ARGS_RELEASE_TAG ?= ${BUILD_ARGS_NAME}-latest
+BUILD_ARGS_RELEASE_TAG ?= latest
 BUILD_ARGS_FROM_IMAGE ?= ${DOCKER_IMAGE_NAME}
 BUILD_ARGS_FROM_TAG ?= ${BUILD_ARGS_RELEASE_TAG}
 
@@ -78,7 +78,7 @@ push:
 
 release:
 	$(MAKE) _releaser && \
-	$(MAKE) _releaser -e BUILD_ARGS_RELEASE_TAG="latest"
+	$(MAKE) _releaser -e BUILD_ARGS_RELEASE_TAG='base-latest'
 .PHONY: release_base
 
 # Actual targets
@@ -94,6 +94,7 @@ push_%:
 release_%:
 	$(MAKE) _releaser \
 		-e BUILD_ARGS_TAG="$*-${GIT_HASH_SHORT}" \
+		-e BUILD_ARGS_RELEASE_TAG="$*-${BUILD_ARGS_RELEASE_TAG}"
 
 build_all:
 	$(MAKE) build && \
