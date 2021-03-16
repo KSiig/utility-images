@@ -1,0 +1,19 @@
+ARG BUILD_ARGS_FROM_IMAGE=ghcr.io/ksiig/utility-images
+ARG BUILD_ARGS_FROM_TAG=base-latest
+FROM ${BUILD_ARGS_FROM_IMAGE}:${BUILD_ARGS_FROM_TAG}
+
+ARG TERRAFORM_VERSION=0.14.8
+ARG HCL2JSON_VERSION=0.3.2
+
+# Install Terraform
+RUN wget https://releases.hashicorp.com/terraform/${TERRAFORM_VERSION}/terraform_${TERRAFORM_VERSION}_linux_amd64.zip && \
+  unzip terraform_${TERRAFORM_VERSION}_linux_amd64.zip && \
+  rm terraform_${TERRAFORM_VERSION}_linux_amd64.zip && \
+  mv terraform /usr/local/bin
+
+# Install HCL2JSON
+RUN wget -O /usr/local/bin/hcl2json https://github.com/tmccombs/hcl2json/releases/download/v${HCL2JSON_VERSION}/hcl2json_linux_amd64 && \
+  chmod +x /usr/local/bin/hcl2json
+
+# Cleanup
+RUN apt-get clean; apt-get autoclean
