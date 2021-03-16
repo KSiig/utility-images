@@ -1,0 +1,6 @@
+ARG BUILD_ARGS_FROM_IMAGE=ghcr.io/ksiig/utility-images
+ARG BUILD_ARGS_FROM_TAG=base-latest
+FROM ${BUILD_ARGS_FROM_IMAGE}:${BUILD_ARGS_FROM_TAG}
+
+RUN apt update -qq && apt install -y -qq python3 python3-pip && \
+  pip3 install mdium
