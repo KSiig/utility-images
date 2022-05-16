@@ -1,4 +1,4 @@
-FROM ubuntu:20.04
+FROM ubuntu:22.04
 
 ARG COLUMN_VERSION=2.36
 
@@ -19,12 +19,11 @@ RUN wget https://mirrors.edge.kernel.org/pub/linux/utils/util-linux/v${COLUMN_VE
   mv column /usr/local/bin && \
   mv .libs/column /usr/local/bin
 
-# Install Azure CLI
-RUN curl -sL https://packages.microsoft.com/keys/microsoft.asc | apt-key add - && \
-  apt-add-repository "deb [arch=amd64] https://packages.microsoft.com/repos/azure-cli/ $(lsb_release -cs) main" && \
-  apt-get -qq update && \
-  DEBIAN_FRONTEND=noninteractive apt-get install --no-install-recommends -y azure-cli > /dev/null && \
-  az extension add --name azure-devops
+# Install GCloud
+RUN echo "deb [signed-by=/usr/share/keyrings/cloud.google.gpg] http://packages.cloud.google.com/apt cloud-cli main" | tee -a /etc/apt/sources.list.d/google-cloud-sdk.list && \
+  curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | apt-key --keyring /usr/share/keyrings/cloud.google.gpg  add - && \
+  apt-get update -y && \
+  apt-get install google-cloud-cli -y
 
 RUN rm -rf /var/lib/apt/lists/*
 
